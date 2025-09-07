@@ -17,6 +17,12 @@ Inspired by Sony DSEE HX, it uses a **non-deep-learning frequency enhancement al
 
 ---
 
+## 安装与使用 / Installation & Usage
+
+[下载 / Download](https://github.com/x1aoqv/DSRE---Digital-Sound-Resolution-Enhancer/releases/tag/v1.0.250908_beta)
+
+---
+
 ## 参数说明 / Parameters
 
 | 参数 / Parameter                               | 默认值 / Default | 说明 / Description                                                   |
