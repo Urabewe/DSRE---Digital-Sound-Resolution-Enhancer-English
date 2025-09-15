@@ -36,14 +36,8 @@ python -m venv DSRE
 
 ### 3. Activate Virtual Environment
 
-**Windows:**
 ```bash
 DSRE\Scripts\activate
-```
-
-**macOS/Linux:**
-```bash
-source DSRE/bin/activate
 ```
 
 ### 4. Install Requirements
