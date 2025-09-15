@@ -20,6 +20,7 @@ Inspired by Sony DSEE HX, it uses a **non-deep-learning frequency enhancement al
 ## Prerequisites
 - Python 3.7 or higher
 - Git
+- Important: ffmpeg.exe must be located in a folder called ffmpeg within the project directory for the application to work properly
 
 ## Installation Steps
 
