@@ -55,7 +55,6 @@ python dsre.py
 - Make sure your virtual environment is activated before installing requirements or running the application
 - The application provides a GUI interface for batch audio enhancement
 - Supports multiple audio formats: WAV, MP3, FLAC, M4A, etc.
-- To deactivate the virtual environment when done, simply run: `deactivate`
 
 
 
