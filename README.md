@@ -2,6 +2,58 @@
 
 <img width="896" height="626" alt="image" src="https://github.com/user-attachments/assets/c7747e30-82b4-4804-a458-474d0d438c7a" />
 
+## ✨ Enhancements & Improvements
+
+This enhanced version of DSRE includes numerous improvements over the original implementation:
+
+### 🎨 **User Interface Enhancements**
+- **Dark Mode Support**: Toggle between light and dark themes with persistent settings
+- **Drag & Drop Interface**: Intuitive file loading with visual feedback
+- **Resizable Panels**: Customizable layout with splitter controls
+- **Keyboard Shortcuts**: Quick access to common functions (F5, Escape, Ctrl+L, etc.)
+- **Recent Files Menu**: Easy access to previously processed files
+- **Enhanced File List**: Better selection handling and visual indicators
+- **Status Bar**: Real-time processing information and feedback
+
+### ⚡ **Performance Optimizations**
+- **File Size-Based Progress**: Accurate progress estimation based on file sizes
+- **Chunked Processing**: Memory-efficient processing for large files (>50MB)
+- **Processing Statistics**: Real-time ETA and performance metrics
+- **Background Processing**: Non-blocking UI with threaded audio processing
+
+### 🛡️ **Error Recovery & Robustness**
+- **Automatic Retry System**: Up to 3 retry attempts for failed operations
+- **Multi-Level Audio Loading**: 5 fallback strategies for corrupted audio files
+- **Intelligent Error Categorization**: Adaptive retry delays based on error types
+- **Partial Processing Recovery**: Resume from where processing left off
+- **Comprehensive Error Handling**: Detailed error messages and recovery suggestions
+
+### 🎵 **Audio Processing Improvements**
+- **MP3 Output Support**: High-quality MP3 encoding with libmp3lame
+- **Enhanced Metadata Preservation**: Better cover art and metadata handling
+- **Improved Sample Rate Handling**: More robust resampling and format conversion
+- **Better Audio Loading**: Multiple fallback methods for various audio formats
+
+### 💾 **Configuration & Persistence**
+- **Settings Persistence**: All preferences saved automatically
+- **Recent Files Tracking**: Remember recently processed files
+- **Theme Persistence**: Dark/light mode preference saved
+- **Parameter Auto-Save**: Real-time saving of all parameter changes
+
+### 🔧 **Code Quality & Maintainability**
+- **Comprehensive Type Hints**: Better code documentation and IDE support
+- **Enhanced Documentation**: Detailed docstrings and code comments
+- **Modular Architecture**: Clean separation of concerns
+- **Error Logging**: Detailed logging for debugging and troubleshooting
+
+### 🎯 **User Experience Improvements**
+- **Intuitive Controls**: Clear button labels and tooltips
+- **Visual Feedback**: Progress bars, status updates, and processing indicators
+- **File Management**: Easy add/remove/clear operations for file lists
+- **Output Organization**: Automatic output directory management
+- **Processing Feedback**: Real-time updates on processing status and statistics
+
+---
 
 ## Description
 
