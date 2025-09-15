@@ -495,11 +495,17 @@ class DSREWorker(QtCore.QThread):
                         pct = int(cur * 100 / max(1, m))
                         self.sig_step_progress.emit(pct, fname)
 
+                    # Debug: Log input audio properties
+                    self.sig_log.emit(f"Input audio shape: {y.shape}, sample rate: {sr} Hz")
+                    self.sig_log.emit(f"Input audio range: {np.min(y):.4f} to {np.max(y):.4f}")
+                    self.sig_log.emit(f"Processing parameters: m={self.params['m']}, decay={self.params['decay']}, pre_hp={self.params['pre_hp']}, post_hp={self.params['post_hp']}")
+
                     # Use chunked processing for files > 50MB
                     if file_size_mb > 50:
                         self.sig_log.emit(f"Using chunked processing for large file: {fname}")
                         y_out = self.process_audio_chunked(y, sr)
                     else:
+                        self.sig_log.emit(f"Starting Zansei enhancement...")
                         y_out = zansei_impl(
                             y, sr,
                             m=int(self.params["m"]),
@@ -510,6 +516,22 @@ class DSREWorker(QtCore.QThread):
                             progress_cb=step_cb,
                             abort_cb=lambda: self._abort  # Pass abort callback
                         )
+                    
+                    # Debug: Log output audio properties
+                    self.sig_log.emit(f"Output audio shape: {y_out.shape}, sample rate: {sr} Hz")
+                    self.sig_log.emit(f"Output audio range: {np.min(y_out):.4f} to {np.max(y_out):.4f}")
+                    
+                    # Calculate and log the difference
+                    if y.shape == y_out.shape:
+                        diff = np.abs(y_out - y)
+                        max_diff = np.max(diff)
+                        mean_diff = np.mean(diff)
+                        self.sig_log.emit(f"Enhancement difference - Max: {max_diff:.6f}, Mean: {mean_diff:.6f}")
+                        
+                        if max_diff < 0.001:
+                            self.sig_log.emit(f"WARNING: Very small enhancement detected! This might indicate the algorithm isn't working properly.")
+                        else:
+                            self.sig_log.emit(f"Enhancement applied successfully - significant changes detected.")
 
                     # Save (preserve original format + metadata)
                     os.makedirs(self.output_dir, exist_ok=True)
@@ -609,20 +631,20 @@ class MainWindow(QtWidgets.QMainWindow):
         # Parameters
         self.sb_m = QtWidgets.QSpinBox()
         self.sb_m.setRange(1, 1024)
-        self.sb_m.setValue(8)
+        self.sb_m.setValue(14)  # Conservative: 12-16, middle = 14
         self.dsb_decay = QtWidgets.QDoubleSpinBox()
         self.dsb_decay.setRange(0.0, 1024)
         self.dsb_decay.setSingleStep(0.05)
-        self.dsb_decay.setValue(1.25)
+        self.dsb_decay.setValue(1.25)  # Conservative: 1.0-1.5, middle = 1.25
         self.sb_pre = QtWidgets.QSpinBox()
         self.sb_pre.setRange(1, 384000)
-        self.sb_pre.setValue(3000)
+        self.sb_pre.setValue(3000)  # Conservative: 2000-4000, middle = 3000
         self.sb_post = QtWidgets.QSpinBox()
         self.sb_post.setRange(1, 384000)
-        self.sb_post.setValue(16000)
+        self.sb_post.setValue(15000)  # Conservative: 12000-18000, middle = 15000
         self.sb_order = QtWidgets.QSpinBox()
         self.sb_order.setRange(1, 1000)
-        self.sb_order.setValue(11)
+        self.sb_order.setValue(10)  # Conservative: 8-12, middle = 10
         self.sb_sr = QtWidgets.QSpinBox()
         self.sb_sr.setRange(1, 384000)
         self.sb_sr.setSingleStep(1000)
@@ -766,6 +788,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.btn_start.clicked.connect(self.on_start)
         self.btn_cancel.clicked.connect(self.on_cancel)
         self.btn_retry.clicked.connect(self.on_retry_failed)
+        
+        # Connect list selection changes to update button states
+        self.list_files.itemSelectionChanged.connect(self.update_button_states)
         
         # Dark mode toggle is connected in button creation
 
@@ -1129,6 +1154,9 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.list_files.addItem(f)
                 # Add to recent files
                 self.add_to_recent_files(f)
+        
+        # Update button states after adding files
+        self.update_button_states()
 
     def on_choose_outdir(self):
         d = QtWidgets.QFileDialog.getExistingDirectory(self, "Select Output Directory", self.le_outdir.text() or "")
@@ -1138,21 +1166,37 @@ class MainWindow(QtWidgets.QMainWindow):
     def on_clear_files(self):
         """Clear all files from the list"""
         self.list_files.clear()
-        # Add placeholder back
-        placeholder_item = QtWidgets.QListWidgetItem("Drag and drop audio files here...")
-        placeholder_item.setFlags(QtCore.Qt.ItemFlag.NoItemFlags)
-        self.list_files.addItem(placeholder_item)
+        self.lbl_stats.setText("Ready")
+        self.lbl_eta.setText("")
+        self.pb_all.setValue(0)
+        self.pb_file.setValue(0)
+        self.te_log.clear()
+        
+        # Update button states after clearing
+        self.update_button_states()
+    
+    def update_button_states(self):
+        """Update button states based on current selection and list contents"""
+        has_selection = len(self.list_files.selectedItems()) > 0
+        has_items = self.list_files.count() > 0
+        
+        self.btn_remove_selected.setEnabled(has_selection)
+        self.btn_retry.setEnabled(len(self.failed_files) > 0)
     
     def on_remove_selected(self):
         """Remove selected files from the list"""
-        current_row = self.list_files.currentRow()
-        if current_row >= 0:
-            self.list_files.takeItem(current_row)
-            # Add placeholder back if list is empty
-            if self.list_files.count() == 0:
-                placeholder_item = QtWidgets.QListWidgetItem("Drag and drop audio files here...")
-                placeholder_item.setFlags(QtCore.Qt.ItemFlag.NoItemFlags)
-                self.list_files.addItem(placeholder_item)
+        # Get all selected items
+        selected_items = self.list_files.selectedItems()
+        if not selected_items:
+            return
+        
+        # Remove selected items (in reverse order to maintain indices)
+        for item in reversed(selected_items):
+            row = self.list_files.row(item)
+            self.list_files.takeItem(row)
+        
+        # Update button states
+        self.update_button_states()
     
     def load_config(self):
         """Load configuration from file"""
@@ -1162,11 +1206,11 @@ class MainWindow(QtWidgets.QMainWindow):
                     config = json.load(f)
                 
                 # Restore UI values
-                self.sb_m.setValue(config.get('m', 8))
+                self.sb_m.setValue(config.get('m', 14))
                 self.dsb_decay.setValue(config.get('decay', 1.25))
                 self.sb_pre.setValue(config.get('pre_hp', 3000))
-                self.sb_post.setValue(config.get('post_hp', 16000))
-                self.sb_order.setValue(config.get('filter_order', 11))
+                self.sb_post.setValue(config.get('post_hp', 15000))
+                self.sb_order.setValue(config.get('filter_order', 10))
                 self.sb_sr.setValue(config.get('target_sr', 96000))
                 self.le_outdir.setText(config.get('output_dir', os.path.abspath("output")))
                 
@@ -1276,7 +1320,13 @@ class MainWindow(QtWidgets.QMainWindow):
         self.te_log.moveCursor(QTextCursor.End)
 
     def on_start(self):
-        files = [self.list_files.item(i).text() for i in range(self.list_files.count())]
+        # Get all files, filtering out placeholder items
+        files = []
+        for i in range(self.list_files.count()):
+            item = self.list_files.item(i)
+            if item.flags() != QtCore.Qt.ItemFlag.NoItemFlags:  # Skip placeholder items
+                files.append(item.text())
+        
         if not files:
             QtWidgets.QMessageBox.warning(self, "No Files", "Please add at least one input file")
             return
