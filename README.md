@@ -8,7 +8,7 @@ Inspired by Sony DSEE HX, it uses a **non-deep-learning frequency enhancement al
 **Key Features:**
 
 * **Batch Processing**: Convert multiple audio files at once.
-* **Multiple Formats**: Supports WAV, MP3, FLAC, M4A, etc.
+* **Multiple Formats**: Supports WAV, MP3, FLAC, M4A, ALAC, etc.
 * **Preserves Cover & Metadata**: No manual editing required.
 * **Flexible Parameters**: Modulation count, decay, high-pass filter, etc.
 * **Fast & Stable**: Does not rely on deep learning, fast processing.
@@ -31,6 +31,6 @@ Inspired by Sony DSEE HX, it uses a **non-deep-learning frequency enhancement al
 | Post-processing high-pass cutoff | 16000 Hz      | Post-enhancement high-pass filter                       |
 | Filter order                         | 11            | High-pass filter order                                   |
 | Target sampling rate                 | 96000 Hz      | Output audio sample rate                                 |
-| Output format                         | ALAC / FLAC   | Choose Hi-Res output format                       |
+| Output format                         | ALAC / FLAC / MP3 | Choose output format (Hi-Res or standard)       |
 
 ---
