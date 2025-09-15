@@ -1,5 +1,8 @@
 # DSRE / Deep Sound Resolution Enhancer
 
+<img width="896" height="626" alt="image" src="https://github.com/user-attachments/assets/c7747e30-82b4-4804-a458-474d0d438c7a" />
+
+
 ## Description
 
 DSRE is a **high-performance audio enhancement tool** that can batch-convert any audio files into **high-resolution (Hi-Res) audio**.
