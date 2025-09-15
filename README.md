@@ -15,9 +15,55 @@ Inspired by Sony DSEE HX, it uses a **non-deep-learning frequency enhancement al
 
 ---
 
-## Installation & Usage
+## DSRE Installation Instructions
 
-[Download](https://github.com/x1aoqv/DSRE---Digital-Sound-Resolution-Enhancer/releases/tag/v1.0.250908_beta)
+## Prerequisites
+- Python 3.7 or higher
+- Git
+
+## Installation Steps
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/Urabewe/DSRE---Digital-Sound-Resolution-Enhancer-English.git
+cd DSRE---Digital-Sound-Resolution-Enhancer-English
+```
+
+### 2. Create Virtual Environment
+```bash
+python -m venv DSRE
+```
+
+### 3. Activate Virtual Environment
+
+**Windows:**
+```bash
+DSRE\Scripts\activate
+```
+
+**macOS/Linux:**
+```bash
+source DSRE/bin/activate
+```
+
+### 4. Install Requirements
+```bash
+pip install -r requirements.txt
+```
+
+### 5. Run the Application
+```bash
+python main.py
+```
+
+## Notes
+- Make sure your virtual environment is activated before installing requirements or running the application
+- The application provides a GUI interface for batch audio enhancement
+- Supports multiple audio formats: WAV, MP3, FLAC, M4A, etc.
+- To deactivate the virtual environment when done, simply run: `deactivate`
+
+
+
 
 ---
 
