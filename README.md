@@ -48,7 +48,7 @@ pip install -r requirements.txt
 
 ### 5. Run the Application
 ```bash
-python main.py
+python dsre.py
 ```
 
 ## Notes
