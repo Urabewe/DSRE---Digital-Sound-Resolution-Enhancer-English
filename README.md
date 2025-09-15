@@ -1,6 +1,7 @@
 # DSRE / Deep Sound Resolution Enhancer
 
-<img width="896" height="626" alt="image" src="https://github.com/user-attachments/assets/c7747e30-82b4-4804-a458-474d0d438c7a" />
+<img width="998" height="745" alt="image" src="https://github.com/user-attachments/assets/f6b5cdda-ed3d-488b-a490-4aac1818d0cf" />
+
 
 ## ✨ Enhancements & Improvements
 
